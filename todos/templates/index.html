@@ -18,10 +18,10 @@
 	    <div>
             {% for todo in todos %}
             <div class="task">
-                <strike>{{ todo.task }}</strike>
+                {{ todo.task }}
                 <small>
-                    <a href="">Edit</a>
-                    <a href="">Delete</a>
+                    <a href="edit/{{ todo.id }}">Edit</a>
+                    <a href="delete/{{ todo.id }}">Delete</a>
                 </small>
             </div>
             {% endfor %}

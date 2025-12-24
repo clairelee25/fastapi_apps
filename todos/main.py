@@ -36,7 +36,7 @@ def get_db():
     finally:
         db.close()
 
-
+# todo 조회
 @app.get("/")
 def home(request: Request,
          db: Session = Depends(get_db)):
@@ -60,6 +60,33 @@ def add(request: Request,
     # todo를 db 추가
     db.add(todo)
     # 변경사항 커밋
+    db.commit()
+    return RedirectResponse(url=app.url_path_for("home"), 
+                            status_code=status.HTTP_303_SEE_OTHER)
+
+# 수정을 위한 조회
+@app.get("/edit/{todo_id}")
+async def edit(request: Request, todo_id: int, db: Session = Depends(get_db)):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    todos = db.query(models.Todo).order_by(models.Todo.id).all()
+    return templates.TemplateResponse("edit.html", {"request": request, "todo": todo, "todos": todos})
+
+# 수정한 것 적용
+@app.post("/edit/{todo_id}")
+async def update(request: Request, todo_id: int, task: str = Form(...), 
+                 completed: bool = Form(False), db: Session = Depends(get_db)):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    todo.task = task
+    todo.completed = completed
+    db.commit()
+    return RedirectResponse(url=app.url_path_for("home"), 
+                            status_code=status.HTTP_303_SEE_OTHER)
+
+# 삭제
+@app.get("/delete/{todo_id}")
+async def delete(request: Request, todo_id: int, db: Session = Depends(get_db)):
+    todo = db.query(models.Todo).filter(models.Todo.id == todo_id).first()
+    db.delete(todo)
     db.commit()
     return RedirectResponse(url=app.url_path_for("home"), 
                             status_code=status.HTTP_303_SEE_OTHER)

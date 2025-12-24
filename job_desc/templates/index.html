@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% block style %}
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% endblock style %}
+</head>
+<body>
+    <main>
+        <h1>취준생용 Job Description 생성기</h1>
+        <!-- <p><img src="/static/images/job_/img.png" alt="직업설명"></p> -->
+
+        <form id="jobForm" action="/generate" method="post">
+            <label>직군</label>
+            <input type="text" name="job_role" placeholder="예: 데이터 분석가" required>
+
+            <label>숙련도</label>
+            <input type="text" name="level" placeholder="예: 신입 / 주니어 / 시니어" required>
+
+            <button type="submit" id="submitBtn">생성하기</button>
+        </form>
+        <!-- 로딩 애니메이션 -->
+        <div id="loading" class="loading-container" style="display:none;">
+            <div class="spinner"></div>
+            <p>AI가 직무 설명을 생성 중입니다...</p>
+        </div>
+        {% if result2 %}
+        <div>
+            <h1>직무 설명</h1>
+            <h2>Job Role</h2>
+            {{result2.job_role}}<br><br>
+            <h2>Level</h2>
+            {{result2.level}}<br><br>
+            <h2>Core Skills</h2>
+            {{result2.core_skills}}<br><br>
+            <h2>Tools</h2>
+            {{result2.tools}}<br><br>
+            <h2>Soft Skills</h2>
+            {{result2.soft_skills}}
+         </div>
+        {% endif %}
+    </main>
+</body>
+</html>
+<script src="/static/js/main.js"></script>
+
